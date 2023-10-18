@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        //oppgave 1
+        class Bil{
+            constructor(regnr, merke, aarsmodell, maxfart, minfart) {
+                this.regnr = regnr;
+                this.merke = merke;
+                this.aarsmodell = aarsmodell;
+                this.maxfart = maxfart;
+                this.minfart = minfart;
+                this.hastighet = 0;
+            }
+
+            //oppgave 3
+            gass() {
+                if(this.hastighet < this.maxfart){
+                    this.hastighet += 10;
+                }
+            }
+
+            brems() {
+                if(this.hastighet >= 10){
+                    this.hastighet -= 10;
+                }
+            }
+
+            //oppgave 5
+            fartNaa() {
+                document.getElementById(this.merke).innerText = this.hastighet + "km/t";
+            }
+
+        }
+
+        //oppgave 2
+        let biler = [];
+        biler.push(new Bil("ABC123", "Volvo", 2006, 200, 0));
+        biler.push(new Bil("DEF456", "Ferrari", 1975, 150, 0));
+        biler.push(new Bil("GHI789", "Lada", 1999, 210, 0));
+
+
+        //oppgave 4
+        for(bilen of biler) {
+            let bil = bilen;
+            let bilDiv = document.createElement("div");
+
+            //(en del av oppgave 5)
+            let bilNavn = document.createElement("div");
+            bilNavn.innerHTML = "<br>" + "<b>" + bil.merke + "</b>" + "</br>";
+            let fartTekst = document.createElement("span");
+            fartTekst.id = bil.merke;
+            fartTekst.innerText = 0 + "km/t";
+
+            let br = document.createElement("br");
+
+            bilDiv.append(bilNavn, fartTekst, br);
+            
+            let giGass = document.createElement("button");
+            giGass.innerText = "Gi gass";
+            giGass.onclick = () => {
+                bil.gass();
+                bil.fartNaa();
+            }
+            bilDiv.appendChild(giGass);
+
+            let bremsNed = document.createElement("button");
+            bremsNed.innerText = "Brems ned";
+            bremsNed.onclick = () => {
+                bil.brems();
+                bil.fartNaa();
+            }
+            bilDiv.appendChild(bremsNed);
+
+            console.log(bil);
+            document.body.appendChild(bilDiv);
+        } 
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>øving 2</title>
+</head>
+<body onload="nyKunde(); matchNavn()">
+    <h1>Velkommen til Pappabanken</h1>
+    <h2>Kontoer</h2>
+    <div id="kontoOversiktDiv"></div>
+
+    <h2>Opprett konto</h2>
+    <div id="opprettKontoDiv">
+        Kontonr <input type="text" id="opprettId" placeholder="0000.00.0000">
+        Navn <input type="text" id="opprettNavn" placeholder="Navn Navnesen">
+        Saldo <input type="number" id="opprettSaldo" placeholder="0">
+        Barn? <input type="checkbox" id="opprettBarnekonto">
+        <button onclick="opprettKonto()">Opprett konto</button>
+    </div>
+
+    <h2>Innskudd/uttak</h2>
+    <div id="pengerDiv">
+        Velg kunde <select id="velgKunde" onchange="matchNavn()"></select>
+        Kontonr <span id="hentKontoNr"></span>
+        Beløp <input type="Number" id="sum" placeholder="0">
+        Innskudd/uttak <select id="velgInnUt">
+            <option value="innskudd">Innskudd</option>
+            <option value="uttak">Uttak</option>
+        </select>
+        <button onclick="kaching()">Gjør</button><br>
+        <b id="message" style="color: red;"></b>
+    </div>
+
+    <h2>Oppgave 5</h2>
+    <button onclick="oppg5()">Kjør oppgave 5</button><br>
+    <ul id="liste"></ul>
+    
+</body>
+<script>
+    class Konto {
+        constructor(kundenr, navn, saldo, erBarn) {
+            this.kundenr = kundenr;
+            this.navn = navn;
+            this.saldo = saldo;
+            this.erBarn = erBarn;
+        }
+
+        innskudd(sum){
+            this.saldo += Number(sum);
+            let message = document.getElementById("message");
+            message.innerText = `Du satt inn ${sum}kr på kundenr. ${this.kundenr}. Ny saldo: ${this.saldo},- Gammel saldo: ${this.saldo - sum},-`;
+        }
+
+        uttak(sum){
+            if(this.saldo < 0 || this.saldo < sum) {
+                alert("Du har ikke nok penger på konto for å utføre uttaket.")
+            }
+            else {
+                this.saldo -= Number(sum);
+                let message = document.getElementById("message");
+                message.innerText = `Det ble gjort et uttak på ${sum}kr på kundenr. ${this.kundenr}. Ny saldo: ${this.saldo},- Gammel saldo: ${Number(this.saldo) + Number(sum)},-`;
+                //denne funket ikke uten at jeg skrev Number på både saldo og sum, men vet ikke hvorfor???
+            }
+        }
+    }
+
+    class BarneKonto extends Konto {
+        constructor(kundenr, navn, saldo, erBarn) {
+            super(kundenr, navn);
+            this.saldo = saldo + 200;
+            this.erBarn = true;
+            //hvorfor må jeg skrive dette her, og ikke hente det fra super? 
+            //det fungerte ikke å hente fra super....
+        }
+    }
+
+
+    let kari = new Konto("3333.76.4444", "Kari", 895, false)
+    let lise = new BarneKonto("1111.00.2222", "Lise", 0, true)
+    let petter = new Konto("2222.14.3333", "Petter", 0, false)
+
+    let kontoer = [];
+    kontoer.push(lise);
+    kontoer.push(petter);
+    kontoer.push(kari);
+
+    function nyKunde(){
+        kontoOversiktDiv.innerHTML = "";
+        velgKunde.innerHTML = "";
+        
+        for(element of kontoer) {
+            let kunde = element;
+            let kundeDiv = document.createElement("div");
+            kundeDiv.innerHTML = `Kunde <b>${kunde.navn}</b>, med kundenr.: <b>${kunde.kundenr}</b>, har saldo: <b>${kunde.saldo}</b>,-  Barn?`;
+            let avkrysset = document.createElement("input");
+            avkrysset.type = "checkbox";
+            if(kunde.erBarn){
+                avkrysset.checked = true;
+            }
+
+            kundeDiv.appendChild(avkrysset);
+            kontoOversiktDiv.appendChild(kundeDiv);
+
+
+            let hentKunde = document.createElement("option");
+            hentKunde.innerText = kunde.navn;
+            document.getElementById("velgKunde");
+            velgKunde.appendChild(hentKunde);
+
+        }
+    }
+
+    opprettKonto = () => {
+        let kundenr = document.getElementById("opprettId").value
+        let navn = document.getElementById("opprettNavn").value
+        let saldo = Number(document.getElementById("opprettSaldo").value)
+        let erBarn = document.getElementById("opprettBarnekonto")
+
+        if(erBarn.checked){
+            kontoer.push(new BarneKonto(kundenr, navn, saldo, erBarn));
+        } else {
+            kontoer.push(new Konto(kundenr, navn, saldo, erBarn));
+        }
+        nyKunde();
+    }
+
+    console.log(kontoer);
+
+    kaching = () => {
+        let sum = document.getElementById("sum").value;
+        let valgtKonto = "";
+
+        for(i = 0; i < kontoer.length; i++) {
+            if(kontoer[i].navn == velgKunde.value) {
+                valgtKonto = kontoer[i];
+            }
+        }
+
+        if(velgInnUt.value == "innskudd") {
+            valgtKonto.innskudd(sum);
+        } else {
+            valgtKonto.uttak(sum);
+        }
+        nyKunde();
+       //jeg får ikke til å fjerne verdien i inputfeltet ved onclick???
+    }
+
+    function matchNavn() {
+        for(i = 0; i < kontoer.length; i++) {
+            let hentKontoNr = document.getElementById("hentKontoNr");
+
+            if(kontoer[i].navn == velgKunde.value) {
+                hentKontoNr.innerHTML = `<b>${kontoer[i].kundenr}</b>`;
+            }
+        }
+    }
+
+    oppg5 = () => {
+        let liste = document.getElementById("liste");
+        
+        let h1 = document.createElement("li");
+        kari.uttak(300)
+        h1.innerHTML = `Kari tar ut 300kr på konto. Ny saldo: ${kontoer[2].saldo}`
+        nyKunde();
+
+        let h2 = document.createElement("li");
+        lise.innskudd(4000);
+        h2.innerHTML = `Bestefaren til Lise er i det gavmilde hjørnet, og setter inn 4000 kroner. Ny saldo: ${kontoer[0].saldo}`;
+        nyKunde();
+
+        let h3 = document.createElement("li");
+        petter.innskudd(3000);
+        h3.innerHTML = `Petter setter inn 3000kr. Ny saldo: ${kontoer[1].saldo}`;
+        nyKunde();
+
+        let h4 = document.createElement("li");
+        kari.uttak(250);
+        petter.innskudd(250);
+        h4.innerHTML = `Kari overfører 250kr til Petter. Ny saldo Petter: ${kontoer[1].saldo}, ny saldo Kari: ${kontoer[2].saldo}`;
+        nyKunde();
+
+        let h5 = document.createElement("li");
+        kari.uttak(800);
+        h5.innerHTML = `Kari forsøker å ta ut 800kr. Du får feilmelding`
+        nyKunde();
+
+        liste.append(h1, h2, h3, h4, h5);
+    }
+
+    //jeg skriver litt cursed kode. Lev med det. Grr
+
+</script>
+</html>

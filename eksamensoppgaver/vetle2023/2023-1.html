@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        class Fugl {
+            constructor(navn, vekt){
+                this._navn = navn;
+                this._vekt = vekt;
+            }
+
+            get navn(){
+                return this._navn;
+            }
+
+            set navn(navn) {
+                this._navn = navn;
+            }
+
+            get vekt() {
+                return this._vekt;
+            }
+
+            set vekt(vekt) {
+                this._vekt = vekt;
+            }
+        }
+
+        class Papegøye extends Fugl{
+            constructor(navn, vekt, ord = []){
+                super(navn, vekt);
+
+                this._ord = ord;
+            }
+
+            lærOrd(nyttOrd){
+                this._ord.push(nyttOrd);
+            }
+
+            siOrd(){
+                const tilfeldigOrd = Math.floor(Math.random()* this._ord.length);
+                return this._ord[tilfeldigOrd];
+            }
+        }
+
+        const papegøye = new Papegøye("Angry bird", 15);
+        papegøye.lærOrd("øving");
+        papegøye.lærOrd("hei");
+        papegøye.lærOrd("ord");
+        console.log(papegøye.siOrd());
+    </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Øving 5</title>
+
+    <style>
+        /**
+         * @license
+         * Copyright 2019 Google LLC. All Rights Reserved.
+         * SPDX-License-Identifier: Apache-2.0
+         */
+        /* 
+          * Always set the map height explicitly to define the size of the div element
+          * that contains the map. 
+          */
+        #map {
+          height: 100%;
+        }
+  
+        /* 
+        * Optional: Makes the sample page fill the window. 
+        */
+        html,
+        body {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+      </style>
+</head>
+<body>
+    <ul id="ul" style="margin: auto;width: 300px;">
+        <li style="display: flex; justify-content: space-between;">
+            <b>Navn/Fylke</b>
+
+            <b>Høyde</b>
+        </li>
+    </ul>
+
+
+    <div id="map"></div>
+    <script
+      src=""
+      defer
+    ></script>
+</body>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script>
+    //nøkler: navn, fylke, høyde
+
+    const getData = async () => {
+        const response = await fetch("./fylkestopper.json");
+        return await response.json();
+    }
+
+    const sortData = (data) => {
+        return data.sort((a,b)=> a.høyde - b.høyde).reverse();
+
+    }
+
+    const formatData = async () => {
+        let data = await getData();
+        console.log(data.topper);
+
+        data = sortData(data.topper);
+        
+        let list = document.getElementById("ul");
+        
+
+        for (const e of data) {
+            let li = document.createElement("li");
+            li.style.display = "flex";
+            li.style.justifyContent = "space-between";
+
+            const div = document.createElement("div");
+
+            let navnP = document.createElement("p");
+            let hoydeP = document.createElement("p");
+            let fylkeP = document.createElement("p");
+            fylkeP.style.color = "lightgrey"
+            div.append(navnP, fylkeP);
+
+            navnP.innerHTML = e.navn;
+            hoydeP.innerHTML = e.høyde + "m";
+            fylkeP.innerHTML = e.fylke;
+
+            li.append(div, hoydeP);
+        
+            list.appendChild(li);
+        }
+    } 
+
+
+      formatData();
+
+        // function printTable (key, value) {
+        //     tableBody.append('<tr><td>'+key+'</td><td>'+value+'</td></tr>');
+        // };
+
+        // let topper = [...data.topper];
+
+        // for (let i in data.topper) {
+        //     utdata.innerHTML +=  data.topper[i].navn + " ";
+        //     for (j in data.topper[i].fylke) {
+        //         utdata.innerHTML += data.topper[i].fylke[j] ;
+        //     }
+        // }
+       
+        // console.log(topper);
+
+
+    // var json = "{./fylkestopper.json}";
+    // var obj = JSON.parse(json);
+
+    //https://folk.ntnu.no/yekibsga/Objektorientert%20prog./fylkestopper.json
+    // fetch("https://folk.ntnu.no/yekibsga/Objektorientert%20prog./fylkestopper.json")
+    //     .then(response => response.json())
+    //     .then((utdata) => {
+    //         console.log("output: " + utdata);
+    //     }).catch(error => console.log(error));
+
+
+
+
+       const initMap = async (data) => {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 5,
+          center: { lat: 64, lng: 10 },
+        });
+
+        data = await getData();
+
+        setMarkers(map, data);
+      }
+
+      // Data for the markers consisting of a name, a LatLng and a zIndex for the
+      // order in which these markers should display on top of each other.
+
+      const setMarkers = async (map, data) => {
+        // Adds markers to the map.
+        // Marker sizes are expressed as a Size of X,Y where the origin of the image
+        // (0,0) is located in the top left of the image.
+        // Origins, anchor positions and coordinates of the marker increase in the X
+        // direction to the right and in the Y direction down.
+        const image = {
+          url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+          // This marker is 20 pixels wide by 32 pixels high.
+          size: new google.maps.Size(20, 32),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the flagpole at (0, 32).
+          anchor: new google.maps.Point(0, 32),
+        };
+        // Shapes define the clickable region of the icon. The type defines an HTML
+        // <area> element 'poly' which traces out a polygon as a series of X,Y points.
+        // The final coordinate closes the poly by connecting to the first coordinate.
+        const shape = {
+          coords: [1, 1, 1, 20, 18, 20, 18, 1],
+          type: "poly",
+        };
+
+        for (let i = 0; i < data.topper.length; i++) {
+          const fjell = data.topper[i].koordinater;
+
+          new google.maps.Marker({
+            position: { lat: fjell.latitude, lng: fjell.longitude },
+            map,
+            icon: image,
+            shape: shape,
+            title: data.topper.navn,
+          });
+        }
+      }
+
+      window.initMap = initMap;
+</script>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP4</title>
+</head>
+<body>
+    <div id="oppg1">
+        <h4>Oppgave 1</h4>
+        <div id="overTi">Tall over ti: </div>
+        <div id="underTi">Tall under ti: </div>
+    </div>
+
+    <div id="oppg2">
+        <h4>Oppgave 2</h4>
+        <p id="utdata2"></p>
+    </div>
+
+    <div>
+        <h4>Oppgave 3</h4>
+        <input id="input" type="text">
+        <button id="button">Søk</button>
+        <img id="img">
+        <p id="error"></p>
+    </div>
+    
+</body>
+<script>
+
+    //oppgave 1
+
+    let tallOver = []; 
+    let tallUnder = [];
+
+    setInterval(leggTilTall, 1000);
+    function leggTilTall() {
+        let tall = Math.floor(Math.random() * 20);
+
+        let underTi = document.getElementById("underTi");
+        let overTi = document.getElementById("overTi");
+
+        const testTall = new Promise((resolve, reject) => {
+
+            if(tall > 10){
+                let beskjed = "Tall er over 10: " + tall;   
+                resolve(beskjed);
+                tallOver.push(tall);
+            } 
+            else if(tall < 10){
+                let beskjed = "Tall under ti: " + tall
+                resolve(beskjed);
+                tallUnder.push(tall);
+            }
+            else {
+                let error = new Error("Tallet er 10");
+                reject(error);
+            } 
+        });
+        overTi.innerHTML = `Tall over ti: ${tallOver}`;
+        underTi.innerHTML = `Tall under ti: ${tallUnder}`;
+
+    }
+
+
+    //oppgave 2
+
+    const array = ["leken", "cavasøndag", "Dt-torsdag", "Tihlde", "lættis", "ompa-lompa", "pissa på", "dinosaur", "alpene", "øl"];
+
+    const storBokstav = async (array) => {
+        return new Promise((resolve, reject) => {
+            for(let i = 0; i < array.length; i++){
+                if(typeof array[i] !== "string"){
+                    const error = new Error("ERROR: ikke en tekststreng");
+                    reject(error);
+                } else {
+                    array[i] = array[i].toUpperCase();
+                }
+            }
+            resolve(array);
+        });
+    }
+
+    const alfabetisk = async (array) => {
+        return new Promise((resolve, reject) => {
+            if(!array.length){
+                //betyr at lengden er null. 
+                reject(new Error("Array er tom."));
+            } else {
+                resolve(array.sort());
+            }
+        });
+    }
+
+    const endreArray = async (array) => {
+        try {
+            const nyArray = await storBokstav(array);
+            const sorterArray = await alfabetisk(nyArray);
+
+            let utdata2 = document.getElementById("utdata2");
+            utdata2.innerHTML = sorterArray.join("<br>");
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    endreArray(array);  
+
+    //oppgave 3
+
+    let button = document.getElementById("button");
+    let input = document.getElementById("input");
+    const div = document.getElementById("oppg3");
+    const img = document.getElementById("img");
+    const error = document.getElementById("error");
+
+    const loadData = async () => {
+        img.src = null;
+        error.innerText = "";
+        try{
+            let brukernavn = input.value;
+            console.log(input.value);
+            const res = await fetch(`https://api.github.com/users/${brukernavn}`);
+        
+            if(!res.ok){
+                error.innerText = "Fant ikke bruker.";
+                return;
+            } 
+
+            const data = await res.json();
+            img.src = data.avatar_url;
+
+        } catch(error) {
+            console.log(error)
+        }
+    };
+    button.addEventListener("click", loadData);
+</script>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class Kjoretoy{
+            farge = "hvit";
+            constructor(kjorelengde, makshastighet){
+             this.makshastighet = makshastighet;
+             this.kjorelengde = kjorelengde;
+            }
+        }
+
+        let kjoretoy = new Kjoretoy(10000, 210);
+
+        let print = document.createElement("div");
+        print.innerHTML = `
+            Farge: ${kjoretoy.farge} <br> 
+            Kjørelengde: ${kjoretoy.kjorelengde} <br> 
+            Makshastighet: ${kjoretoy.makshastighet}
+        `;
+        // print.innerHTML = JSON.stringify(kjoretoy);
+        document.body.appendChild(print);
+
+        class Buss extends Kjoretoy{
+            constructor(kjorelengde, makshastighet, makspassasjerer){
+                super(kjorelengde, makshastighet);
+                this.makspassasjerer = makspassasjerer;
+            }
+
+            sjekkAnt(antallPassasjerer){
+                if(antallPassasjerer > this.makspassasjerer) return false; 
+                else return true;
+
+                //evt: return antallPassasjerer <= this.makspassasjer;
+            }
+
+            dagsLeie(){
+                let mva = 0.25;
+                let leiePrPers = 100;
+                let prisUmva = this.makspassasjerer * leiePrPers;
+                let totalSum = prisUmva * (1+mva)
+                return totalSum;
+            }
+        }
+
+        let buss = new Buss(8000, 100, 60);
+        console.log(buss.sjekkAnt(50));
+        
+        console.log(buss.farge)
+
+        console.log(buss.dagsLeie())
+        
+    </script>
+</body>
+</html>

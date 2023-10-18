@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bobler</title>
+</head>
+<body>
+</body>
+<script>
+    //vi skal lage program som lager bobler i forskjellig størrelse
+    let canvas = document.createElement("canvas");
+    canvas.width = 600;
+    canvas.height = 400;
+    canvas.fillStyle = "black";
+
+    //hvordan tegner vi på tegneområdet
+    let ctx = canvas.getContext("2d");
+
+    canvas.addEventListener("mousedown", museklikk, false);
+    canvas.addEventListener("mousemove",musbeveg,false);
+
+    let bobler = [];
+    
+    //vi lager en boble
+    class Boble {
+        constructor(x, y, r){
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.orgfarge = this.farge;
+            this.farge = randomColor();
+        }
+
+        flytt() {
+            this.x = this.x + Math.floor((Math.random()*11) - 5);
+            this.y = this.y + Math.floor((Math.random()*11) - 5);
+            //boblen kan flytte seg 5px enten til høyre eller venstre.
+        }
+
+        vis() {
+            if (this.erUtenfor()) {
+                this.flytt;
+                return;
+            } 
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 25, 0, 2*Math.PI);
+            ctx.fillStyle = this.farge;
+            ctx.fill();
+            //koordinat x koordinat y, radius, start på 0 grader, går til 360 grader (eller 2 ganger PI)
+            ctx.strokeStyle = "white";
+            ctx.stroke();
+        }
+
+        inneholder(x,y) {
+            let a = x - this.x;
+            let b = y - this.y;
+            let d = Math.sqrt(a*a + b*b);
+
+            if (d < this.r) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        erUtenfor() {
+            return (
+            this.x - this.r < 0 ||
+            this.y - this.r < 0 ||
+            this.x + this.r > canvas.width ||
+            this.y + this.r > canvas.height 
+            );
+        }
+
+        nyBoble() {
+            for(let i = 0; i < bobler.length; i++){
+                let x = Math.floor(Math.random()*canvas.width);
+                let y = Math.floor(Math.random()*canvas.height);
+                let r = Math.floor(Math.random()*40+10);
+
+                bobler[i] = bobler.push(new Boble (x, y, r));
+            }
+        }
+    }
+    
+    let boble1 = bobler.push(new Boble(200, 150, 50));
+    let boble2 = bobler.push(new Boble(150, 250, 30));
+
+    
+
+    function reset() {
+        /*her får vi det til å se ut som det tegnes nye bobler, 
+        men funksjonen gjør at alle elementene tegnes opp på nytt igjen */
+        ctx.fillStyle = "black";
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+    }
+
+    setInterval(tegn, 100);
+    setInterval(lagNy, 1000);
+
+    function lagNy() {
+        let x = Math.floor(Math.random()*canvas.width);
+        let y = Math.floor(Math.random()*canvas.height);
+        let r = Math.floor(Math.random()*40+10);
+
+        let lagNy = bobler.push(new Boble(x,y,r));
+
+    }
+
+    function tegn() {
+        reset();
+        for(let boble of bobler){
+            boble.flytt();
+            boble.vis();
+        }
+    }
+ 
+    function museklikk(event){
+        let valgtBoble = false;
+
+        for(let i = 0; i < bobler.length; i++){
+            if(bobler[i].inneholder(event.x,event.y)) {
+                bobler.splice(i, 1);
+                valgtBoble = true;
+                //slettet
+            } 
+        }
+
+        if(valgtBoble === false) {
+            //ny boble når du klikker i canvas
+            let r = Math.floor(Math.random() * 40 + 10);
+            let b = new Boble(event.x,event.y,r);
+            bobler.push(b);
+        }
+    }
+
+    function musbeveg(event) {
+        for(let boble of bobler){
+            if(boble.inneholder(event.x,event.y)) {
+                boble.farge = "white";
+            } else {
+                boble.farge = boble.orgfarge;
+            }
+        }
+    }
+
+    function randomColor() {
+        let red = Math.floor(Math.random() * 256);
+        let blue = Math.floor(Math.random() * 256);
+        let green = Math.floor(Math.random() * 256);
+        return "rgb(" + red + ", " + green + ", " + blue + ")";
+    }
+
+    document.body.append(canvas);
+    //tørre å leke seg med 3d?
+    //denne koden suger. atle suger. 
+</script>
+</html>

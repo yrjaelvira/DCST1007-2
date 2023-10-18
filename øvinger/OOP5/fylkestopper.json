@@ -1,0 +1,69 @@
+
+    {"topper" : [
+        {
+            "navn": "Folarskardnuten", 
+            "fylke":"Viken", 
+            "høyde":1933, 
+            "koordinater": {"latitude": 60.60743449939664, "longitude": 7.782499655513385}
+        }, 
+        {
+            "navn": "Galdhøpiggen", 
+            "fylke":"Innlandet", 
+            "høyde":2469,
+            "koordinater": {"latitude": 61.63644328170126, "longitude": 8.31252366826169}
+        },
+        {
+            "navn": "Gaustatoppen", 
+            "fylke": "Vestfold og Telemark", 
+            "høyde":1883, 
+            "koordinater": {"latitude": 59.854200137312645, "longitude": 8.649196105338099}
+        },
+        {
+            "navn": "Jiehkkevarri", 
+            "fylke": "Troms og Finnmark", 
+            "høyde":1834, 
+            "koordinater": {"latitude": 69.46943381618917, "longitude": 19.878330582349626}
+        },
+        {
+            "navn": "Kjerkeberget", 
+            "fylke":"Oslo",
+            "høyde":630, 
+            "koordinater": {"latitude": 60.13517961435807, "longitude": 10.619047209536303}
+        },
+        {
+            "navn": "Oksskolten", 
+            "fylke": "Nordland", 
+            "høyde": 1915, 
+            "koordinater": {"latitude": 66.01424444502922, "longitude": 14.33856660651997}
+        },
+        {
+            "navn": "Pyttegga", 
+            "fylke": "Møre og Romsdal", 
+            "høyde":1999, 
+            "koordinater": {"latitude": 62.21471047379401, "longitude": 7.694337199365828}
+        },
+        {
+            "navn": "Store Skagastølstinden", 
+            "fylke": "Vestland", 
+            "høyde":2405, 
+            "koordinater": {"latitude": 61.46129353311237, "longitude": 7.871999868005004}
+        },
+        {
+            "navn": "Storskrymten", 
+            "fylke": "Trøndelag", 
+            "høyde":1985, 
+            "koordinater": {"latitude": 62.37252088145193, "longitude": 9.061832382043553}
+        },
+        {
+            "navn": "Sæbyggjenuten", 
+            "fylke": "Agder", 
+            "høyde":1507, 
+            "koordinater": {"latitude": 59.46177949460735, "longitude": 7.625635176991417}
+        },
+        {
+            "navn": "Vassdalseggi", 
+            "fylke": "Rogaland", 
+            "høyde":1658, 
+            "koordinater": {"latitude": 59.763324904102475, "longitude": 7.110416626300957}
+        }
+    ]}

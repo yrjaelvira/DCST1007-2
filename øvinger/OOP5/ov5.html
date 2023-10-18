@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <tr id="tableBody">
+
+        </tr>
+    </table>
+</body>
+<script>
+    let tableBody = document.getElementById("tableBody");
+
+        const data = fetch("./fylkestopper.json");
+        const object = JSON.parse(data);
+        console.log(data);
+        // return await Response.json();
+    
+   
+        var table = document.createElement("table"), row, cellA, cellB;
+        document.body.appendChild(table);
+        for (let key in data) {
+            // (C2) ROWS & CELLS
+            row = table.insertRow();
+            cellA = row.insertCell();
+            cellB = row.insertCell();
+    
+            // (C3) KEY & VALUE
+            cellA.innerHTML = key;
+            cellB.innerHTML = data[key];
+        }
+        
+        
+
+
+        // tableBody.append('<tr><td>'+key+'</td><td>'+value+'</td></tr>');
+    
+</script>
+</html>
